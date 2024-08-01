@@ -215,7 +215,8 @@ function shareVersion(index) {
         let timeText = version.timestamp;
         timeText = timeText.replace(/\//g, '').replace(/:/g, '').replace(/ /g, '-');
 
-        const htmlContent = `<!DOCTYPE html>
+        const htmlContent = 
+		`<!DOCTYPE html>
 <html>
 <head>
     <style>
