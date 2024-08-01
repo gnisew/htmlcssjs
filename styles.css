@@ -1,6 +1,6 @@
 /* 全局樣式 */
 body {
-    font-family: tauhu-oo, Calibri, Arial, sans-serif;
+    font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,8 +9,9 @@ body {
 }
 
 * {
-    font-family: tauhu-oo, Calibri, Arial;
+  font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
 }
+
 .head-container {
    user-select: none;
 }
@@ -115,8 +116,9 @@ body {
 
 /* CodeMirror 編輯器樣式 */
 .CodeMirror {
+    font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
     height: 100%;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
