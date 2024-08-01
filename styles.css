@@ -1,0 +1,346 @@
+/* 全局樣式 */
+body {
+    font-family: tauhu-oo, Calibri, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+.head-container {
+   user-select: none;
+}
+
+/* 主要內容區域 */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+}
+
+/* 標籤容器 */
+.tabs-container {
+    position: relative;
+    background-color: #f1f1f1;
+    padding-right: 30px;
+    transition: max-height 0.3s ease-out;
+    max-height: 40px;
+    cursor: pointer;
+    /* 添加鼠標指針 */
+}
+
+.tabs-container.open {
+    max-height: 150px;
+    /* 展開狀態 */
+}
+
+.tabs-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.tabs {
+    display: flex;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+
+/* 標籤按鈕 */
+.tab-button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 10px 10px 10px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.tab-button:hover {
+    background-color: #ddd;
+}
+
+.tab-button.active {
+    background-color: #ccc;
+}
+
+/* 切換標籤按鈕 */
+.toggle-tabs {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+	color: #aaa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+	z-index: 100;
+}
+
+.toggle-tabs:hover {
+    background-color: #e0e0e0;
+}
+
+/* 標籤內容 */
+.tab-content {
+    flex: 1;
+    display: flex;
+    font-size: 14px;
+}
+
+/* 編輯器容器 */
+.editor-container,
+.output {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.editor-container.active,
+.output.active {
+    display: flex;
+}
+
+/* CodeMirror 編輯器樣式 */
+.CodeMirror {
+    height: 100%;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    flex: 1;
+    overflow: auto;
+    /* 允許編輯器滾動 */
+}
+
+.CodeMirror-lines {
+    padding: 10px 0;
+}
+
+.CodeMirror-gutters {
+    width: auto !important;
+    min-width: 40px;
+    padding-right: 10px;
+}
+
+/* 調整行號的對齊和間距 */
+.CodeMirror-linenumber {
+    padding: 0 3px 0 5px;
+    min-width: 20px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* 輸出框架 */
+#output-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 控制台輸出 */
+#console-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    font-family: monospace;
+}
+
+/* 工具欄 */
+.toolbar {
+    display: flex;
+    justify-content: center;
+    padding: 5px 10px 5px 10px;
+    background-color: #f1f1f1;
+    overflow-x: auto;
+}
+
+.toolbar-wrapper {
+    display: flex;
+    gap: 5px;
+}
+
+.toolbar button {
+    padding: 5px 8px;
+    background-color: #aaa;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.toolbar button:hover {
+    background-color: #888;
+}
+
+/* 版本面板 */
+.versions-panel {
+    display: flex;
+    flex-direction: row;
+    /* 確保子元素水平排列 */
+    background-color: #f1f1f1;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    width: 0;
+    height: 100%;
+}
+
+.versions-panel.open {
+    width: 100%;
+    /* 或者設置一個固定寬度，如 800px */
+}
+
+/* 預覽面板 */
+.preview-panel {
+    flex: 1;
+    /* 這會使預覽面板佔據所有剩餘空間 */
+    overflow: auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+/* 版本列表面板 */
+.version-panel {
+    width: 360px;
+    /* 固定寬度 */
+    flex: 0 0 360px;
+    /* 不縮放，不增長，基礎大小360px */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.versions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px 5px 15px;
+    background-color: #ddd;
+}
+
+#close-versions {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 版本列表 */
+#versions-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.version-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.version-item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f44336;
+}
+
+/* 版本底部按鈕 */
+.versions-footer {
+    padding: 0px 10px 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #ddd;
+}
+
+.versions-footer button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.versions-footer button:hover {
+    background-color: #45a049;
+}
+
+.version-name-input {
+    width: 150px;
+    padding: 10px 10px;
+    border: 0.5px solid #eee;
+    border-radius: 3px;
+}
+
+@media (max-width: 767px) {
+    .versions-panel {
+        flex-direction: column;
+        height: 100vh;
+        /* 使用視窗高度 */
+    }
+
+    .version-panel {
+        width: 100%;
+        height: auto;
+        max-height: 30vh;
+        min-height: 260px;
+        overflow-y: auto;
+        order: 1;
+        /* 將 version-panel 置於頂部 */
+    }
+
+    .preview-panel {
+        width: 100%;
+        height: 90vh;
+        min-height: 0;
+        order: 2;
+        /* 將 preview-panel 置於底部 */
+        overflow-y: auto;
+    }
+}
+
+.CodeMirror-foldgutter {
+    width: .7em;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+    cursor: pointer;
+}
+
+.CodeMirror-foldgutter-open:after {
+    content: "\25BE";
+}
+
+.CodeMirror-foldgutter-folded:after {
+    content: "\25B8";
+}
+
+.shareThis-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.shareThis-btn:hover {
+    transform: scale(1.1); 
+}

@@ -1,0 +1,140 @@
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥷烏衣行 HtmlCssJs</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/htmlmixed/htmlmixed.min.js"></script>
+    <!-- CodeMirror 折疊相關文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/xml-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/comment-fold.min.js"></script>
+    <!-- CodeMirror 折疊樣式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/fold/foldgutter.min.css">
+
+    <script src="https://unpkg.com/prettier@2.8.8/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-html.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-postcss.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.8/parser-babel.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+
+	<link href="https://tauhu.tw/tauhu-oo.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+ <button class="shareThis-btn" style="display: none;">🔗</button>
+
+    <div id="head-container" class="head-container">
+        <button id="toggle-tabs" class="toggle-tabs">▼</button>
+        <div class="tabs-container" id="tabs-container">
+            <div class="tabs-wrapper">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="html">HTML</button>
+                    <button class="tab-button" data-tab="css">CSS</button>
+                    <button class="tab-button" data-tab="js">JS</button>
+                    <button class="tab-button" data-tab="console">LOG</button>
+                    <button class="tab-button" data-tab="output">OUT</button>
+                    <button class="tab-button" data-tab="versions" id="versions-btn">版本</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="toolbar" id="toolbar">
+            <div class="toolbar-wrapper">
+                <select class="insert-text-dropdown">
+                    <option value="">符</option>
+                    <option value="&quot;">"</option>
+                    <option value="&apos;">'</option>
+                    <option value="&lt;">&lt;</option>
+                    <option value="&gt;">&gt;</option>
+                    <option value="//">//</option>
+                    <option value="/*">/*</option>
+                    <option value="*/">*/</option>
+                    <option value="{">{</option>
+                    <option value="}">}</option>
+                    <option value="[">[</option>
+                    <option value="]">]</option>
+                    <option value=":">:</option>
+                    <option value=".">.</option>
+                    <option value="-">-</option>
+                    <option value="_">_</option>
+                    <option value=",">,</option>
+                    <option value=";">;</option>
+                </select>
+                <button class="undo-btn" disabled title="還原">↩︎</button>
+                <button class="redo-btn" disabled title="重做">⤵</button>
+                <button class="clear-btn" title="清除">✕</button>
+                <button class="copy-btn" title="複製">C</button>
+                <button class="beautiful-btn" title="格式化">✔</button>
+                <button class="divide-btn" title="拆分">拆</button>
+                <button class="combine-btn" title="合併">合</button>
+                <button class="theme-toggle-btn" title="主題">◑</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="main-content">
+        <div class="tab-content" id="editors-container">
+            <div id="html" class="editor-container active">
+                <textarea id="html-editor"></textarea>
+            </div>
+
+            <div id="css" class="editor-container ">
+                <textarea id="css-editor"></textarea>
+            </div>
+
+            <div id="js" class="editor-container ">
+                <textarea id="js-editor"></textarea>
+            </div>
+
+            <div id="console" class="editor-container ">
+                <div id="console-output"></div>
+            </div>
+
+            <div id="output" class="output ">
+                <iframe id="output-frame"></iframe>
+            </div>
+        </div>
+
+
+        <div id="versions-panel" class="versions-panel">
+            <div class="preview-panel"></div>
+            <div class="version-panel">
+                <div class="versions-header">
+                    <p>🥷烏衣行HCJ：版本列表</p>
+                    <button id="close-versions">×</button>
+                </div>
+                <div class="versions-footer">
+                    <button id="save-version">♥ 儲存當前版本</button>
+                    <button id="delete-all-versions">✖︎ 刪除所有版本</button>
+                </div>
+                <div id="versions-list"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+
+
+</body>
+
+</html>
