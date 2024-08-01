@@ -1,7 +1,7 @@
 // 全局變量
 let versions = [];
 let isEditingVersionName = false;
-let htmlEditor, cssEditor, jsEditor; // 宣告 CodeMirror 編輯器實例
+let htmlEditor, cssEditor, jsEditor;
 let cssEditorRefreshed = false;
 let jsEditorRefreshed = false;
 
@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const outputFrame = document.getElementById('output-frame');
     const consoleOutput = document.getElementById('console-output');
 
-    // 定義主題
     const themes = {
         dark: 'monokai',
         light: 'default'
@@ -25,12 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
         currentTheme = currentTheme === 'light' ? 'dark' : 'light';
         const newTheme = themes[currentTheme];
 
-        // 更新所有編輯器的主題
         [htmlEditor, cssEditor, jsEditor].forEach(editor => {
             editor.setOption('theme', newTheme);
         });
 
-        // 更新按鈕文字
         themeToggleBtn.textContent = currentTheme === 'light' ? '◑' : '◐';
     }
 
@@ -179,13 +176,7 @@ function shareVersion(index) {
     // 獲取當前 URL 並添加參數
     const shareURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
-    // 複製 URL 到剪貼板
-    navigator.clipboard.writeText(shareURL).then(() => {
-        alert('分享連結已複製到剪貼板');
-    }).catch(err => {
-        console.error('無法複製到剪貼板:', err);
-        alert('無法複製連結，請手動複製：\n' + shareURL);
-    });
+    tinyurl(shareURL);
 }
 
 
@@ -236,7 +227,7 @@ function shareVersion(index) {
             type: 'text/html'
         });
 
-        // 創建一個隱藏的下載鏈接
+        // 創建一個下載鏈接
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = '' + timeText + '.html';
@@ -249,7 +240,6 @@ function shareVersion(index) {
         const version = versions[index];
         const previewPanel = document.querySelector('.preview-panel');
 
-        // 清空預覽面板
         previewPanel.innerHTML = '';
 
         // 創建一個 iframe 來顯示結果
@@ -260,7 +250,6 @@ function shareVersion(index) {
 
         previewPanel.appendChild(iframe);
 
-        // 設置 iframe 的內容
         const content = `
             <!DOCTYPE html>
             <html>
@@ -418,12 +407,10 @@ function shareVersion(index) {
         updateVersionsList();
     });
 
-    // 修改 saveVersions 函數（如果需要的話）
     function saveVersions() {
         localStorage.setItem('editorVersions', JSON.stringify(versions));
     }
 
-    // 修改 loadVersions 函數（如果需要的話）
     function loadVersions() {
         const savedVersions = localStorage.getItem('editorVersions');
         return savedVersions ? JSON.parse(savedVersions) : [];
