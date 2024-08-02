@@ -1229,3 +1229,88 @@ function showFunctionList(functions) {
         }
     });
 }
+
+
+
+// 獲取樣式按鈕元素
+const styleBtn = document.querySelector('.style-btn');
+
+// 當切換到CSS編輯器時顯示樣式按鈕
+document.querySelector('.tab-button[data-tab="css"]').addEventListener('click', function() {
+    styleBtn.style.display = 'inline-block';
+});
+
+// 當切換到其他編輯器時隱藏樣式按鈕
+document.querySelectorAll('.tab-button:not([data-tab="css"])').forEach(button => {
+    button.addEventListener('click', function() {
+        styleBtn.style.display = 'none';
+    });
+});
+
+// 樣式按鈕點擊事件
+styleBtn.addEventListener('click', function() {
+    const cssCode = cssEditor.getValue();
+    const styles = extractStyles(cssCode);
+    showStyleList(styles);
+});
+
+// 提取CSS代碼中的樣式
+function extractStyles(code) {
+    const styleRegex = /(?:\/\*\s*(.+?)\s*\*\/)?\s*([^{]+)\s*{[^}]*}/g;
+    const styles = [];
+    let match;
+    while ((match = styleRegex.exec(code)) !== null) {
+        let comment = match[1] ? match[1].trim() : '';
+        let selector = match[2].trim();
+        let title = comment.length > 15 ? comment.substring(0, 15) + '...' : comment;
+        styles.push({
+            selector: selector,
+            position: match.index,
+            title: title
+        });
+    }
+    return styles;
+}
+
+// 顯示樣式列表
+function showStyleList(styles) {
+    // 移除舊的樣式列表（如果存在）
+    const oldList = document.querySelector('.style-list');
+    if (oldList) {
+        oldList.remove();
+    }
+
+    // 創建新的樣式列表
+    const listContainer = document.createElement('div');
+    listContainer.className = 'style-list';
+
+    const title = document.createElement('h3');
+    title.textContent = '🥷 樣式目錄';
+    listContainer.appendChild(title);
+
+    const list = document.createElement('ol');
+    styles.forEach(style => {
+        const item = document.createElement('li');
+        item.textContent = style.selector;
+        if (style.title) {
+            item.setAttribute('title', style.title);
+        }
+        item.addEventListener('click', () => {
+            cssEditor.setCursor(cssEditor.posFromIndex(style.position));
+            cssEditor.focus();
+            listContainer.remove();
+        });
+        list.appendChild(item);
+    });
+
+    listContainer.appendChild(list);
+    document.body.appendChild(listContainer);
+
+    // 點擊列表外部時關閉列表
+    document.addEventListener('click', function closeList(e) {
+        if (!listContainer.contains(e.target) && e.target !== styleBtn) {
+            listContainer.remove();
+            document.removeEventListener('click', closeList);
+        }
+    });
+}
