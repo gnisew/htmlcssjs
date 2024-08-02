@@ -1100,9 +1100,9 @@ function shareThis() {
     }
 
     // 清理和編碼內容
-    const cleanHTML = version.html.replace(/<!--[\s\S]*?-->/g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/>\s+</g, '><').replace(/\s*([<>])\s*/g, '$1').replace(/\n+/g, '').trim();
-    const cleanCSS = version.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([:;{}])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
-    const cleanJS = version.js.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([=:+\-*/<>{}()[\],;])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+    const cleanHTML = currentState.html.replace(/<!--[\s\S]*?-->/g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/>\s+</g, '><').replace(/\s*([<>])\s*/g, '$1').replace(/\n+/g, '').trim();
+    const cleanCSS = currentState.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([:;{}])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+    const cleanJS = currentState.js.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([=:+\-*/<>{}()[\],;])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
 
 
 
