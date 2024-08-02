@@ -1154,3 +1154,80 @@ async function shortenUrl(originalUrl) {
     }
 }
 
+// 獲取函數按鈕元素
+const functionBtn = document.querySelector('.function-btn');
+
+// 當切換到JS編輯器時顯示函數按鈕
+document.querySelector('.tab-button[data-tab="js"]').addEventListener('click', function() {
+    functionBtn.style.display = 'inline-block';
+});
+
+// 當切換到其他編輯器時隱藏函數按鈕
+document.querySelectorAll('.tab-button:not([data-tab="js"])').forEach(button => {
+    button.addEventListener('click', function() {
+        functionBtn.style.display = 'none';
+    });
+});
+
+// 函數按鈕點擊事件
+functionBtn.addEventListener('click', function() {
+    const jsCode = jsEditor.getValue();
+    const functions = extractFunctions(jsCode);
+    showFunctionList(functions);
+});
+
+// 提取JavaScript代碼中的函數
+function extractFunctions(code) {
+    const functionRegex = /function\s+(\w+)\s*\([^)]*\)\s*{/g;
+    const functions = [];
+    let match;
+
+    while ((match = functionRegex.exec(code)) !== null) {
+        functions.push({
+            name: match[1],
+            position: match.index
+        });
+    }
+
+    return functions;
+}
+
+// 顯示函數列表
+function showFunctionList(functions) {
+    // 移除舊的函數列表（如果存在）
+    const oldList = document.querySelector('.function-list');
+    if (oldList) {
+        oldList.remove();
+    }
+
+    // 創建新的函數列表
+    const listContainer = document.createElement('div');
+    listContainer.className = 'function-list';
+
+    const title = document.createElement('h3');
+    title.textContent = '🥷 函數目錄';
+    listContainer.appendChild(title);
+
+    const list = document.createElement('ol');
+    functions.forEach(func => {
+        const item = document.createElement('li');
+        item.textContent = func.name;
+        item.addEventListener('click', () => {
+            jsEditor.setCursor(jsEditor.posFromIndex(func.position));
+            jsEditor.focus();
+            listContainer.remove();
+        });
+        list.appendChild(item);
+    });
+
+    listContainer.appendChild(list);
+    document.body.appendChild(listContainer);
+
+    // 點擊列表外部時關閉列表
+    document.addEventListener('click', function closeList(e) {
+        if (!listContainer.contains(e.target) && e.target !== functionBtn) {
+            listContainer.remove();
+            document.removeEventListener('click', closeList);
+        }
+    });
+}
