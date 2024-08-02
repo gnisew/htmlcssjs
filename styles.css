@@ -114,9 +114,20 @@ body {
     display: flex;
 }
 
+#output-frame {
+    font-family: 'tauhu-oo', Calibri, Arial, sans-serif !important;
+}
+
+
+.CodeMirror,
+.CodeMirror-scroll,
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+    font-family: 'tauhu-oo', Calibri, Arial, sans-serif !important;
+}
+
 /* CodeMirror 編輯器樣式 */
 .CodeMirror {
-    font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
     height: 100%;
     font-size: 16px;
     line-height: 1.5;
