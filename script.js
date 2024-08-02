@@ -1,4 +1,3 @@
-// 全局變量
 let versions = [];
 let isEditingVersionName = false;
 let htmlEditor, cssEditor, jsEditor;
@@ -103,8 +102,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // 初始化版本列表
     updateVersionsList();
 
-
-
     closeVersionsBtn.addEventListener('click', () => {
         versionsPanel.classList.remove('open');
     });
@@ -143,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
             versionItem.querySelector('.download-btn').addEventListener('click', () => downloadVersion(index));
             versionItem.querySelector('.viewOutput-btn').addEventListener('click', () => viewOutputVersion(index));
             versionItem.querySelector('.viewCode-btn').addEventListener('click', () => viewCodeVersion(index));
-			versionItem.querySelector('.share-btn').addEventListener('click', () => shareVersion(index));
+            versionItem.querySelector('.share-btn').addEventListener('click', () => shareVersion(index));
 
             const versionNameSpan = versionItem.querySelector('.version-name');
             versionNameSpan.addEventListener('dblclick', (e) => editVersionName(e, index));
@@ -155,29 +152,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
+    function shareVersion(index) {
+        const version = versions[index];
 
+        // 移除註解、空行和多餘的空格
+        const cleanHTML = version.html.replace(/<!--[\s\S]*?-->/g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/>\s+</g, '><').replace(/\s*([<>])\s*/g, '$1').replace(/\n+/g, '').trim();
+        const cleanCSS = version.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([:;{}])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+        const cleanJS = version.js.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([=:+\-*/<>{}()[\],;])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
 
-function shareVersion(index) {
-    const version = versions[index];
-    
-    // 移除註解、空行和多餘的空格
-    const cleanHTML = version.html.replace(/<!--[\s\S]*?-->/g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/>\s+</g, '><').replace(/\s*([<>])\s*/g, '$1').replace(/\n+/g, '').trim();
-    const cleanCSS = version.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([:;{}])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
-    const cleanJS = version.js.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([=:+\-*/<>{}()[\],;])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+        // 編碼並創建 URL 參數
+        const params = new URLSearchParams({
+            h: btoa(encodeURIComponent(cleanHTML)),
+            c: btoa(encodeURIComponent(cleanCSS)),
+            j: btoa(encodeURIComponent(cleanJS)),
+            v: 'x'
+        });
 
-    // 編碼並創建 URL 參數
-    const params = new URLSearchParams({
-        h: btoa(encodeURIComponent(cleanHTML)),
-        c: btoa(encodeURIComponent(cleanCSS)),
-        j: btoa(encodeURIComponent(cleanJS)),
-        v: 'x'
-    });
+        // 獲取當前 URL 並添加參數
+        const shareURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
-    // 獲取當前 URL 並添加參數
-    const shareURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-
-    tinyurl(shareURL);
-}
+        tinyurl(shareURL);
+    }
 
 
     // 還原版本
@@ -206,8 +201,8 @@ function shareVersion(index) {
         let timeText = version.timestamp;
         timeText = timeText.replace(/\//g, '').replace(/:/g, '').replace(/ /g, '-');
 
-        const htmlContent = 
-		`<!DOCTYPE html>
+        const htmlContent =
+            `<!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -454,7 +449,59 @@ function shareVersion(index) {
         }
     });
 
-/*
+    /*
+        document.querySelector('.beautiful-btn').addEventListener('click', function() {
+            const activeEditor = getActiveEditor();
+            if (activeEditor) {
+                const mode = activeEditor === htmlEditor ? 'html' :
+                    activeEditor === cssEditor ? 'css' : 'javascript';
+
+                const selectedText = activeEditor.getSelection();
+                const isSelection = selectedText.length > 0;
+                const textToBeautify = isSelection ? selectedText : activeEditor.getValue();
+
+                try {
+                    const beautifiedCode = prettier.format(textToBeautify, {
+                        parser: mode,
+                        plugins: prettierPlugins,
+                        printWidth: 80,
+                        tabWidth: 2,
+                        useTabs: false,
+                        semi: true,
+                        singleQuote: false,
+                        trailingComma: "none",
+                        bracketSpacing: true,
+                        jsxBracketSameLine: false,
+                        arrowParens: "avoid",
+                        htmlWhitespaceSensitivity: "css",
+                        endOfLine: "lf"
+                    });
+
+                    if (isSelection) {
+                        const from = activeEditor.getCursor('from');
+                        const to = activeEditor.getCursor('to');
+                        activeEditor.replaceRange(beautifiedCode, from, to);
+                    } else {
+                        activeEditor.setValue(beautifiedCode);
+                    }
+
+                    activeEditor.focus();
+                } catch (error) {
+                    let errorMessage = "代碼有誤，請檢查語法：\n";
+                    if (error.loc) {
+                        errorMessage += `第 ${error.loc.start.line} 行，第 ${error.loc.start.column} 列\n`;
+                    }
+                    errorMessage += error.message;
+
+                    alert(errorMessage);
+                }
+            }
+        });
+    */
+
+
+
+
     document.querySelector('.beautiful-btn').addEventListener('click', function() {
         const activeEditor = getActiveEditor();
         if (activeEditor) {
@@ -465,84 +512,32 @@ function shareVersion(index) {
             const isSelection = selectedText.length > 0;
             const textToBeautify = isSelection ? selectedText : activeEditor.getValue();
 
-            try {
-                const beautifiedCode = prettier.format(textToBeautify, {
-                    parser: mode,
-                    plugins: prettierPlugins,
-                    printWidth: 80,
-                    tabWidth: 2,
-                    useTabs: false,
-                    semi: true,
-                    singleQuote: false,
-                    trailingComma: "none",
-                    bracketSpacing: true,
-                    jsxBracketSameLine: false,
-                    arrowParens: "avoid",
-                    htmlWhitespaceSensitivity: "css",
-                    endOfLine: "lf"
+            let beautifiedText = '';
+            if (mode === 'html') {
+                beautifiedText = html_beautify(textToBeautify, {
+                    indent_size: 2,
+                    wrap_line_length: 80,
+                    preserve_newlines: true
                 });
+            } else if (mode === 'css') {
+                beautifiedText = css_beautify(textToBeautify, {
+                    indent_size: 2,
+                    wrap_line_length: 80
+                });
+            } else if (mode === 'javascript') {
+                beautifiedText = js_beautify(textToBeautify, {
+                    indent_size: 2,
+                    wrap_line_length: 80
+                });
+            }
 
-                if (isSelection) {
-                    const from = activeEditor.getCursor('from');
-                    const to = activeEditor.getCursor('to');
-                    activeEditor.replaceRange(beautifiedCode, from, to);
-                } else {
-                    activeEditor.setValue(beautifiedCode);
-                }
-
-                activeEditor.focus();
-            } catch (error) {
-                let errorMessage = "代碼有誤，請檢查語法：\n";
-                if (error.loc) {
-                    errorMessage += `第 ${error.loc.start.line} 行，第 ${error.loc.start.column} 列\n`;
-                }
-                errorMessage += error.message;
-
-                alert(errorMessage);
+            if (isSelection) {
+                activeEditor.replaceSelection(beautifiedText);
+            } else {
+                activeEditor.setValue(beautifiedText);
             }
         }
     });
-*/
-
-
-
-
-	document.querySelector('.beautiful-btn').addEventListener('click', function() {
-		const activeEditor = getActiveEditor();
-		if (activeEditor) {
-			const mode = activeEditor === htmlEditor ? 'html' :
-				activeEditor === cssEditor ? 'css' : 'javascript';
-
-			const selectedText = activeEditor.getSelection();
-			const isSelection = selectedText.length > 0;
-			const textToBeautify = isSelection ? selectedText : activeEditor.getValue();
-
-			let beautifiedText = '';
-			if (mode === 'html') {
-				beautifiedText = html_beautify(textToBeautify, {
-					indent_size: 2,
-					wrap_line_length: 80,
-					preserve_newlines: true
-				});
-			} else if (mode === 'css') {
-				beautifiedText = css_beautify(textToBeautify, {
-					indent_size: 2,
-					wrap_line_length: 80
-				});
-			} else if (mode === 'javascript') {
-				beautifiedText = js_beautify(textToBeautify, {
-					indent_size: 2,
-					wrap_line_length: 80
-				});
-			}
-
-			if (isSelection) {
-				activeEditor.replaceSelection(beautifiedText);
-			} else {
-				activeEditor.setValue(beautifiedText);
-			}
-		}
-	});
 
 
     // 拆分按鈕
@@ -941,14 +936,14 @@ function loadSharedContent(params) {
         if (headContainer) {
             headContainer.style.display = 'none';
         }
-        
+
         // 切換到 output 頁籤
         const outputTab = document.querySelector('.tab-button[data-tab="output"]');
         if (outputTab) {
             outputTab.click();
         }
     }
-	    // 更新輸出
+    // 更新輸出
     updateOutput();
 }
 
@@ -1058,15 +1053,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const params = new URLSearchParams(window.location.search);
 
     const shareThisBtn = document.querySelector('.shareThis-btn');
-     // 如果存在 v 參數，隱藏 head-container 並切換到 output 頁籤
+    // 如果存在 v 參數，隱藏 head-container 並切換到 output 頁籤
     if (params.has('v')) {
         const headContainer = document.getElementById('head-container');
         if (headContainer) {
             headContainer.style.display = 'none';
         }
 
-		shareThisBtn.style.display = 'block';
-        
+        shareThisBtn.style.display = 'block';
+
         // 切換到 output 頁籤
         const outputTab = document.querySelector('.tab-button[data-tab="output"]');
         if (outputTab) {
@@ -1075,9 +1070,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-
-
-    
 
 
     // 為 shareThis-btn 添加點擊事件
@@ -1089,11 +1081,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
 function shareThis() {
     // 從 localStorage 獲取當前內容
     const currentState = JSON.parse(localStorage.getItem('currentState'));
-    
+
     if (!currentState) {
         alert('沒有可分享的內容');
         return;
@@ -1117,24 +1108,24 @@ function shareThis() {
     // 獲取當前 URL 並添加參數
     const shareURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
-	tinyurl(shareURL);
+    tinyurl(shareURL);
 }
 
 
 function tinyurl(currentURL) {
     if (currentURL.startsWith("http")) { // 偵測是否以http開頭;
         shortenUrl(currentURL)
-            .then((shortenedUrl) => {              
+            .then((shortenedUrl) => {
                 navigator.clipboard.writeText(shortenedUrl); // 在這裡處理縮短後的網址
-				alert('短已複製到剪貼簿');
+                alert('短已複製到剪貼簿');
             })
             .catch((error) => {
                 navigator.clipboard.writeText(currentURL); // 無法縮短則複製原始網址
-				alert('長網址已複製到剪貼簿');
+                alert('長網址已複製到剪貼簿');
             });
     } else {
         navigator.clipboard.writeText(currentURL); // 離線版的原始網址
-		alert('離線長網址已複製到剪貼簿');
+        alert('離線長網址已複製到剪貼簿');
     }
 }
 
@@ -1176,16 +1167,20 @@ functionBtn.addEventListener('click', function() {
     showFunctionList(functions);
 });
 
+
 // 提取JavaScript代碼中的函數
 function extractFunctions(code) {
-    const functionRegex = /function\s+(\w+)\s*\([^)]*\)\s*{/g;
+    const functionRegex = /(?:\/\/\s*(.+)\s*\n)?\s*function\s+(\w+)\s*\([^)]*\)\s*{/g;
     const functions = [];
     let match;
 
     while ((match = functionRegex.exec(code)) !== null) {
+        let comment = match[1] ? match[1].trim() : '';
+        let title = comment.length > 20 ? comment.substring(0, 20) + '...' : comment;
         functions.push({
-            name: match[1],
-            position: match.index
+            name: match[2],
+            position: match.index,
+            title: title
         });
     }
 
@@ -1212,6 +1207,9 @@ function showFunctionList(functions) {
     functions.forEach(func => {
         const item = document.createElement('li');
         item.textContent = func.name;
+        if (func.title) {
+            item.setAttribute('title', func.title);
+        }
         item.addEventListener('click', () => {
             jsEditor.setCursor(jsEditor.posFromIndex(func.position));
             jsEditor.focus();
