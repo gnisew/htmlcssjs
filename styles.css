@@ -8,11 +8,11 @@ body {
 }
 
 * {
-  font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
+    font-family: tauhu-oo, Calibri, Arial, sans-serif !important;
 }
 
 .head-container {
-   user-select: none;
+    user-select: none;
 }
 
 /* 主要內容區域 */
@@ -82,10 +82,10 @@ body {
     font-size: 14px;
     cursor: pointer;
     outline: none;
-	color: #aaa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #aaa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-	z-index: 100;
+    z-index: 100;
 }
 
 .toggle-tabs:hover {
@@ -356,7 +356,7 @@ body {
 }
 
 .shareThis-btn:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 }
 
 .function-btn {
