@@ -825,7 +825,13 @@ function shareVersion(index) {
             <!DOCTYPE html>
             <html>
                 <head>
-                    <style>${css}</style>
+				    <link href="https://tauhu.tw/tauhu-oo.css" rel="stylesheet">
+                    <style>
+                        body, * {
+                            font-family: 'tauhu-oo', Calibri, Arial, sans-serif !important;
+                        }
+                        ${css}
+                    </style>
                 </head>
                 <body>
                     ${html}
@@ -843,6 +849,7 @@ function shareVersion(index) {
                 </body>
             </html>
         `;
+        const outputFrame = document.getElementById('output-frame');
         outputFrame.srcdoc = outputContent;
     }
 
@@ -1093,9 +1100,11 @@ function shareThis() {
     }
 
     // 清理和編碼內容
-    const cleanHTML = cleanCode(currentState.html);
-    const cleanCSS = cleanCode(currentState.css);
-    const cleanJS = cleanCode(currentState.js);
+    const cleanHTML = version.html.replace(/<!--[\s\S]*?-->/g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/>\s+</g, '><').replace(/\s*([<>])\s*/g, '$1').replace(/\n+/g, '').trim();
+    const cleanCSS = version.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([:;{}])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+    const cleanJS = version.js.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(\n)\s+/g, '$1').replace(/\s+(\n)\s+/g, '').replace(/\s*([=:+\-*/<>{}()[\],;])\s*/g, '$1').replace(/^\s+|\s+$/g, '').replace(/\n+/g, '').trim();
+
+
 
     // 編碼並創建 URL 參數
     const params = new URLSearchParams({
@@ -1110,20 +1119,6 @@ function shareThis() {
 
 	tinyurl(shareURL);
 }
-
-
-// 輔助函數：清理程式碼
-function cleanCode(code) {
-    return code.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
-               .replace(/^\s+|\s+$/g, '')
-               .replace(/\s*([<>{};()])\s*/g, '$1')
-               .replace(/\n+/g, '');
-}
-
-
-
-
-
 
 
 function tinyurl(currentURL) {
